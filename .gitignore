@@ -1,0 +1,16 @@
+# Ignore dependencies
+node_modules/
+package-lock.json
+
+# Ignore environment variables
+.env
+.env.local
+.env.production
+
+# Ignore logs
+logs/
+*.log
+
+# Ignore build files
+dist/
+build/
