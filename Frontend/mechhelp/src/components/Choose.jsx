@@ -11,9 +11,10 @@ const Choose = () => {
           <img src={car} alt="Car" className="max-w-full h-auto mt-4" />
         </div>
 
-        <div className="flex flex-col md:flex-row gap-4 justify-center items-stretch md:justify-evenly mt-8">
+        <div className="flex flex-col md:flex-row gap-4 justify-center items-center md:justify-evenly mt-8">
           {[
             {
+              
               title: "Diagnostics",
               text: "If your car needs a mobile diagnostic check done at your home or office, let MechHelp come to you.",
             },
@@ -32,7 +33,7 @@ const Choose = () => {
           ].map((service, index) => (
             <div
               key={index}
-              className="w-64 h-64  bg-black rounded-2xl font-medium text-white p-4 flex flex-col hover:scale-105 transition-transform duration-300"
+              className="w-64 h-64  bg-black rounded-2xl font-medium text-white p-4 flex flex-col hover:scale-105 transition-transform duration-300 "
             >
               <h2 className="text-blue-500 font-bold text-2xl mt-2">
                 {service.title}
