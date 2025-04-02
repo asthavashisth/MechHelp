@@ -36,6 +36,12 @@ const userSchema = new mongoose.Schema(
             type: String,
             trim: true,
         },
+        role: {
+            type: String,
+            enum: ["user", "mechanic"], // ✅ Restricts role values to "user" or "mechanic"
+            required: true,
+            default: "user", // ✅ Default role is "user"
+        },
     },
     {
         timestamps: true, // Automatically creates `createdAt` and `updatedAt`
