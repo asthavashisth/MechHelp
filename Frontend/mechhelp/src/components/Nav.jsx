@@ -29,7 +29,7 @@ const Nav = () => {
             Home
           </NavLink>
           <NavLink
-            to="/services"
+            to="services"
             className={({ isActive }) =>
               `font-semibold hover:text-gray-400 ${
                 isActive ? "text-blue-300" : "text-white"

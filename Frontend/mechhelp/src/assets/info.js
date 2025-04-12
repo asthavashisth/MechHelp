@@ -4,11 +4,21 @@ import mechanic2 from './mechanic2.jpg'
 import mechanic3 from './mechanic3.jpg'
 import mechanic4 from './mechanic4.jpg'
 
+import car2 from './car2.png'
+
 export const info=[
     {
         id:1,
         name:"MechHelp",
         image:mech2
+    }
+]
+
+export const services=[
+    {
+        id:1,
+        name:"car",
+        image:car2
     }
 ]
 
