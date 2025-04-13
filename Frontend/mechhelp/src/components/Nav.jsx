@@ -1,11 +1,24 @@
 import React, { useState } from "react";
 import { IoMdMenu } from "react-icons/io";
-import { NavLink } from "react-router-dom";
-
+import { NavLink, useNavigate } from "react-router-dom";
+import axios from "axios"; // ✅ Import axios
+const USER_API_END_POINT = import.meta.env.VITE_USER_API_END_POINT;
 const Nav = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
+
+  const handleLogout = async () => {
+    try {
+      await axios.get(`${USER_API_END_POINT}/logout`, {
+        withCredentials: true,
+      });
+      navigate("/"); // ✅ Redirect after logout
+    } catch (err) {
+      console.error("Logout failed:", err);
+    }
+  }; // ✅ Function closes here, not after return!
 
   return (
     <div>
@@ -29,7 +42,7 @@ const Nav = () => {
             Home
           </NavLink>
           <NavLink
-            to="services"
+            to="/services"
             className={({ isActive }) =>
               `font-semibold hover:text-gray-400 ${
                 isActive ? "text-blue-300" : "text-white"
@@ -61,7 +74,10 @@ const Nav = () => {
         </div>
 
         {/* Logout Button */}
-        <button className="hidden md:block bg-blue-700 px-3 py-1 rounded-full text-white font-semibold cursor-pointer hover:bg-amber-200 hover:text-black mr-2">
+        <button
+          onClick={handleLogout}
+          className="hidden md:block bg-blue-700 px-3 py-1 rounded-full text-white font-semibold cursor-pointer hover:bg-amber-200 hover:text-black mr-2"
+        >
           Logout
         </button>
 
@@ -78,19 +94,41 @@ const Nav = () => {
       {/* Mobile Menu */}
       {menuOpen && (
         <div className="md:hidden bg-black text-white p-4 space-y-3 text-center">
-          <NavLink to="/layout" onClick={toggleMenu} className="block font-semibold hover:text-gray-400">
+          <NavLink
+            to="/layout"
+            onClick={toggleMenu}
+            className="block font-semibold hover:text-gray-400"
+          >
             Home
           </NavLink>
-          <NavLink to="/services" onClick={toggleMenu} className="block font-semibold hover:text-gray-400">
+          <NavLink
+            to="/services"
+            onClick={toggleMenu}
+            className="block font-semibold hover:text-gray-400"
+          >
             Services
           </NavLink>
-          <NavLink to="/nearby-stores" onClick={toggleMenu} className="block font-semibold hover:text-gray-400">
+          <NavLink
+            to="/nearby-stores"
+            onClick={toggleMenu}
+            className="block font-semibold hover:text-gray-400"
+          >
             Nearby Stores
           </NavLink>
-          <NavLink to="/profile" onClick={toggleMenu} className="block font-semibold hover:text-gray-400">
+          <NavLink
+            to="/profile"
+            onClick={toggleMenu}
+            className="block font-semibold hover:text-gray-400"
+          >
             Profile
           </NavLink>
-          <button className="bg-blue-700 px-3 py-1 rounded-full text-white font-semibold cursor-pointer hover:bg-amber-200 hover:text-black mt-3">
+          <button
+            onClick={() => {
+              handleLogout();
+              toggleMenu();
+            }}
+            className="bg-blue-700 px-3 py-1 rounded-full text-white font-semibold cursor-pointer hover:bg-amber-200 hover:text-black mt-3"
+          >
             Logout
           </button>
         </div>
