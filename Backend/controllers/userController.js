@@ -72,6 +72,14 @@ exports.loginUser = async (req, res) => {
     }
 };
 
+
+exports.Logout =(req,res)=>{
+    return res.cookie("token","",{expiresIn:new Date(Date.now())}).json({
+        message: "Logged out successfully",
+        success:true
+    })
+}
+
 // Get User Profile
 exports.getUserProfile = async (req, res) => {
     try {
