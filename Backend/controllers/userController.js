@@ -44,15 +44,10 @@ exports.loginUser = async (req, res) => {
     try {
         const { email, password, userType } = req.body;
 
-        // Find user by email
-        const user = await User.findOne({ email });
+        // Find user by email AND role
+        const user = await User.findOne({ email, role: userType });
         if (!user) {
-            return res.status(400).json({ message: "Invalid email or password" });
-        }
-
-        // Check user role
-        if (user.role !== userType) {
-            return res.status(403).json({ message: `Access denied. Please login as ${user.role}` });
+            return res.status(400).json({ message: "Invalid email, password, or user type" });
         }
 
         // Compare passwords
@@ -71,6 +66,7 @@ exports.loginUser = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
 
 
 exports.Logout =(req,res)=>{

@@ -34,15 +34,13 @@ const SignUp = () => {
           password: formData.password,
           userType,
         });
-        
-        // Store user data and token
+
         localStorage.setItem("token", data.token);
         localStorage.setItem("userType", userType);
         localStorage.setItem("userData", JSON.stringify(data.user));
-        
+
         toast.success("Login Successful! ✅", { position: "top-center" });
-        
-        // Redirect based on user type
+
         if (userType === "mechanic") {
           setTimeout(() => navigate("/mechanic-dashboard"), 1000);
         } else {
@@ -51,8 +49,9 @@ const SignUp = () => {
       } else {
         const { data } = await axios.post(`${USER_API_END_POINT}register`, {
           ...formData,
-          userType,
+          role: userType, // ✅ Corrected key name
         });
+
         toast.success("Registration Successful! 🎉", { position: "top-center" });
       }
     } catch (err) {
@@ -70,7 +69,7 @@ const SignUp = () => {
         <div className="w-full sm:w-1/2 p-8">
           <div className="flex justify-center mb-6">
             <div className="relative w-full">
-              <select 
+              <select
                 value={userType}
                 onChange={(e) => setUserType(e.target.value)}
                 className="block appearance-none w-full bg-blue-700 text-white font-semibold py-3 px-6 rounded-full hover:bg-amber-400 hover:text-black cursor-pointer text-center"
@@ -78,11 +77,6 @@ const SignUp = () => {
                 <option value="user">{login ? "Login as User" : "Sign Up as User"}</option>
                 <option value="mechanic">{login ? "Login as Mechanic" : "Sign Up as Mechanic"}</option>
               </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-white">
-                <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
-                </svg>
-              </div>
             </div>
           </div>
 
