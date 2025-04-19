@@ -1,135 +1,275 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { info } from "../assets/info";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-
-const USER_API_END_POINT = import.meta.env.VITE_USER_API_END_POINT;
 
 const SignUp = () => {
-  const navigate = useNavigate();
-  const [login, setLogin] = useState(true);
-  const [userType, setUserType] = useState("user");
+  const [userType, setUserType] = useState("user"); // "user" or "mechanic"
+  const [isLogin, setIsLogin] = useState(false); // Login mode toggle
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    phoneNumber: "",
-    location: "",
-    address: "",
+    name: "",
     email: "",
+    phone: "",
     password: "",
+    address: "",
+    location: "",
+    specializations: "",
+    serviceTypes: "",
+    availability: "",
+    workingHours: "",
+    isAvailable: true,
+    verified: false,
+    rating: 0,
+    totalCompletedServices: 0,
   });
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const apiUrl = `${import.meta.env.VITE_USER_API_END_POINT}/${userType}`; // Use the environment variable for API base URL
+
     try {
-      if (login) {
-        const { data } = await axios.post(`${USER_API_END_POINT}login`, {
+      let response;
+      if (isLogin) {
+        response = await axios.post(`${apiUrl}/login`, {
           email: formData.email,
           password: formData.password,
-          userType,
         });
-
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("userType", userType);
-        localStorage.setItem("userData", JSON.stringify(data.user));
-
-        toast.success("Login Successful! ✅", { position: "top-center" });
-
-        if (userType === "mechanic") {
-          setTimeout(() => navigate("/mechanic-dashboard"), 1000);
-        } else {
-          setTimeout(() => navigate("/layout"), 1000);
-        }
+        alert("Login Successful");
       } else {
-        const { data } = await axios.post(`${USER_API_END_POINT}register`, {
-          ...formData,
-          role: userType, // ✅ Corrected key name
-        });
-
-        toast.success("Registration Successful! 🎉", { position: "top-center" });
+        response = await axios.post(`${apiUrl}/register`, formData);
+        alert("Registration Successful");
       }
-    } catch (err) {
-      toast.error(err.response?.data?.message || "Something went wrong! ❌", { position: "top-center" });
+      console.log(response); // Log the response from API for debugging
+    } catch (error) {
+      console.error("Error in request", error);
+      alert(isLogin ? "Login Failed" : "Registration Failed");
     }
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-blue-500 to-purple-600 p-6">
-      <ToastContainer />
-      <div className="bg-white shadow-xl rounded-2xl p-10 flex flex-col sm:flex-row items-center max-w-5xl w-[80%]">
-        <div className="hidden sm:block w-1/2">
-          <img src={info[0].image} alt={info[0].name} className="w-[80%] h-[80%] object-cover rounded-lg shadow-lg" />
-        </div>
-        <div className="w-full sm:w-1/2 p-8">
-          <div className="flex justify-center mb-6">
-            <div className="relative w-full">
-              <select
-                value={userType}
-                onChange={(e) => setUserType(e.target.value)}
-                className="block appearance-none w-full bg-blue-700 text-white font-semibold py-3 px-6 rounded-full hover:bg-amber-400 hover:text-black cursor-pointer text-center"
-              >
-                <option value="user">{login ? "Login as User" : "Sign Up as User"}</option>
-                <option value="mechanic">{login ? "Login as Mechanic" : "Sign Up as Mechanic"}</option>
-              </select>
-            </div>
+    <div className="max-w-lg mx-auto bg-gradient-to-r from-blue-500 via-purple-600 to-pink-500 p-8 rounded-lg shadow-lg text-white">
+      <h2 className="text-3xl font-semibold text-center mb-6">
+        {isLogin ? "Login" : userType === "mechanic" ? "Mechanic" : "User"}{" "}
+        {isLogin ? "" : "Sign Up"}
+      </h2>
+
+      {/* Toggle between Login and SignUp */}
+      <div className="flex justify-center mb-6">
+        <button
+          onClick={() => setIsLogin(!isLogin)}
+          className={`${
+            isLogin ? "bg-blue-500" : "bg-gray-200 text-black"
+          } text-white py-2 px-6 rounded-l-lg`}
+        >
+          Login
+        </button>
+        <button
+          onClick={() => setIsLogin(!isLogin)}
+          className={`${
+            !isLogin ? "bg-blue-500" : "bg-gray-200 text-black"
+          } text-white py-2 px-6 rounded-r-lg`}
+        >
+          Sign Up
+        </button>
+      </div>
+
+      {/* Dropdown for user type (remains visible in both Login and Sign Up) */}
+      <div className="flex justify-center mb-6">
+        <select
+          onChange={(e) => setUserType(e.target.value)}
+          value={userType}
+          className="bg-gray-200 text-black py-2 px-6 rounded-md"
+        >
+          <option value="user">User</option>
+          <option value="mechanic">Mechanic</option>
+        </select>
+      </div>
+
+      <form onSubmit={handleSubmit}>
+        <div className="space-y-4">
+          {!isLogin && userType === "user" && (
+            <>
+              <div className="flex flex-col">
+                <label className="text-gray-100">Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  required
+                  className="mt-2 p-3 border border-gray-300 rounded-md"
+                />
+              </div>
+
+              <div className="flex flex-col">
+                <label className="text-gray-100">Phone</label>
+                <input
+                  type="text"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                  required
+                  className="mt-2 p-3 border border-gray-300 rounded-md"
+                />
+              </div>
+
+              <div className="flex flex-col">
+                <label className="text-gray-100">Address</label>
+                <input
+                  type="text"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleInputChange}
+                  required
+                  className="mt-2 p-3 border border-gray-300 rounded-md"
+                />
+              </div>
+            </>
+          )}
+
+          {!isLogin && userType === "mechanic" && (
+            <>
+              <div className="flex flex-col">
+                <label className="text-gray-100">Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  required
+                  className="mt-2 p-3 border border-gray-300 rounded-md"
+                />
+              </div>
+
+              <div className="flex flex-col">
+                <label className="text-gray-100">Phone</label>
+                <input
+                  type="text"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                  required
+                  className="mt-2 p-3 border border-gray-300 rounded-md"
+                />
+              </div>
+
+              <div className="flex flex-col">
+                <label className="text-gray-100">Address</label>
+                <input
+                  type="text"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleInputChange}
+                  required
+                  className="mt-2 p-3 border border-gray-300 rounded-md"
+                />
+              </div>
+
+              <div className="flex flex-col">
+                <label className="text-gray-100">Location (Coordinates)</label>
+                <input
+                  type="text"
+                  name="location"
+                  value={formData.location}
+                  onChange={handleInputChange}
+                  required
+                  className="mt-2 p-3 border border-gray-300 rounded-md"
+                  placeholder="e.g. (latitude, longitude)"
+                />
+              </div>
+
+              <div className="flex flex-col">
+                <label className="text-gray-100">Specializations</label>
+                <input
+                  type="text"
+                  name="specializations"
+                  value={formData.specializations}
+                  onChange={handleInputChange}
+                  required
+                  className="mt-2 p-3 border border-gray-300 rounded-md"
+                  placeholder="e.g. Engine Repair, Transmission"
+                />
+              </div>
+
+              <div className="flex flex-col">
+                <label className="text-gray-100">Service Types</label>
+                <input
+                  type="text"
+                  name="serviceTypes"
+                  value={formData.serviceTypes}
+                  onChange={handleInputChange}
+                  required
+                  className="mt-2 p-3 border border-gray-300 rounded-md"
+                  placeholder="e.g. Car Wash, Oil Change"
+                />
+              </div>
+
+              <div className="flex flex-col">
+                <label className="text-gray-100">Availability</label>
+                <input
+                  type="text"
+                  name="availability"
+                  value={formData.availability}
+                  onChange={handleInputChange}
+                  required
+                  className="mt-2 p-3 border border-gray-300 rounded-md"
+                  placeholder="e.g. Available, Not Available"
+                />
+              </div>
+
+              <div className="flex flex-col">
+                <label className="text-gray-100">Working Hours</label>
+                <input
+                  type="text"
+                  name="workingHours"
+                  value={formData.workingHours}
+                  onChange={handleInputChange}
+                  required
+                  className="mt-2 p-3 border border-gray-300 rounded-md"
+                  placeholder="e.g. 9 AM - 6 PM"
+                />
+              </div>
+            </>
+          )}
+
+          {/* Common fields for both User and Mechanic */}
+          <div className="flex flex-col">
+            <label className="text-gray-100">Email</label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
+              required
+              className="mt-2 p-3 border border-gray-300 rounded-md"
+            />
           </div>
 
-          <h1 className="text-4xl font-extrabold text-center text-blue-700 mb-6">
-            {login ? "Login" : "Sign Up"}
-          </h1>
-          <form className="space-y-4" onSubmit={handleSubmit}>
-            {!login && (
-              <>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-gray-700 font-semibold mb-1">First Name</label>
-                    <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} required className="w-full border p-3 rounded-lg" />
-                  </div>
-                  <div>
-                    <label className="block text-gray-700 font-semibold mb-1">Last Name</label>
-                    <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} required className="w-full border p-3 rounded-lg" />
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-gray-700 font-semibold mb-1">Phone Number</label>
-                  <input type="text" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} required className="w-full border p-3 rounded-lg" />
-                </div>
-                <div>
-                  <label className="block text-gray-700 font-semibold mb-1">Location</label>
-                  <input type="text" name="location" value={formData.location} onChange={handleChange} required className="w-full border p-3 rounded-lg" />
-                </div>
-                <div>
-                  <label className="block text-gray-700 font-semibold mb-1">Address</label>
-                  <input type="text" name="address" value={formData.address} onChange={handleChange} required className="w-full border p-3 rounded-lg" />
-                </div>
-              </>
-            )}
-            <div>
-              <label className="block text-gray-700 font-semibold mb-1">Email</label>
-              <input type="email" name="email" value={formData.email} onChange={handleChange} required className="w-full border p-3 rounded-lg" />
-            </div>
-            <div>
-              <label className="block text-gray-700 font-semibold mb-1">Password</label>
-              <input type="password" name="password" value={formData.password} onChange={handleChange} required className="w-full border p-3 rounded-lg" />
-            </div>
-            <button className="w-full bg-blue-700 text-white font-semibold py-3 rounded-full hover:bg-amber-400 hover:text-black">
-              {login ? "Login" : "Sign Up"}
+          <div className="flex flex-col">
+            <label className="text-gray-100">Password</label>
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleInputChange}
+              required
+              className="mt-2 p-3 border border-gray-300 rounded-md"
+            />
+          </div>
+
+          <div className="mt-6 flex justify-center">
+            <button
+              type="submit"
+              className="bg-blue-700 text-white py-3 px-6 rounded-lg hover:bg-blue-800 transition duration-300"
+            >
+              {isLogin ? "Login" : "Sign Up"}
             </button>
-          </form>
-          <p className="text-center text-gray-600 mt-5">
-            {login ? "Don't have an account?" : "Already have an account?"}
-            <span onClick={() => setLogin(!login)} className="text-blue-700 font-semibold cursor-pointer ml-1 hover:underline">
-              {login ? "Sign Up" : "Login"}
-            </span>
-          </p>
+          </div>
         </div>
-      </div>
+      </form>
     </div>
   );
 };
