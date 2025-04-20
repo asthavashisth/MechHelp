@@ -3,9 +3,8 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const geocoder = require("../utils/geocoder");
 
-// Helper: Generate JWT
 const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
+  return jwt.sign({ id, role: "mechanic" }, process.env.JWT_SECRET, {
     expiresIn: "7d",
   });
 };
@@ -21,47 +20,35 @@ exports.registerMechanic = async (req, res) => {
       coordinates,
       specializations,
       serviceTypes,
-      workingHours, // { start: "09:00", end: "18:00" }
+      workingHours,
       isAvailable,
-      verified, // optional, default false
-      rating, // optional, default 0
-      totalCompletedServices, // optional, default 0
+      verified,
+      rating,
+      totalCompletedServices,
     } = req.body;
 
-    // Check if mechanic already exists
     const existing = await Mechanic.findOne({ email });
-    if (existing) {
-      return res.status(400).json({ message: "Mechanic already exists" });
-    }
+    if (existing) return res.status(400).json({ message: "Mechanic already exists" });
 
     let finalCoordinates = coordinates;
 
-    // If coordinates not provided, try to get from address
     if (!coordinates || !coordinates.length) {
       const geoData = await geocoder.geocode(address);
       if (!geoData.length) {
-        return res
-          .status(400)
-          .json({ message: "Invalid address. Unable to geocode." });
+        return res.status(400).json({ message: "Invalid address. Unable to geocode." });
       }
-      console.log("im here");
-      
-      finalCoordinates = [geoData[0].latitude, geoData[0].longitude];
+      finalCoordinates = [geoData[0].longitude, geoData[0].latitude];
     }
-    // Hash password
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create new mechanic
     const newMechanic = new Mechanic({
       name,
       email,
       phone,
       password: hashedPassword,
       address,
-      location: {
-        type: "Point",
-        coordinates: finalCoordinates,
-      },
+      location: { type: "Point", coordinates: finalCoordinates },
       specializations,
       serviceTypes,
       availability: {
@@ -80,52 +67,47 @@ exports.registerMechanic = async (req, res) => {
     res.status(201).json({
       message: "Mechanic registered successfully",
       token,
-      mechanic: {
-        ...newMechanic.toObject(),
-        password: undefined, // Don't expose password
-      },
+      mechanic: { ...newMechanic.toObject(), password: undefined },
     });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: error.message });
   }
 };
 
-//  Login Mechanic
 exports.loginMechanic = async (req, res) => {
   try {
     const { email, password } = req.body;
 
     const mechanic = await Mechanic.findOne({ email });
-    if (!mechanic)
-      return res.status(404).json({ message: "Mechanic not found" });
+    if (!mechanic) return res.status(404).json({ message: "Mechanic not found" });
 
     const isMatch = await bcrypt.compare(password, mechanic.password);
-    if (!isMatch)
-      return res.status(401).json({ message: "Invalid credentials" });
+    if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
 
     const token = generateToken(mechanic._id);
 
     res.status(200).json({
       message: "Login successful",
       token,
+      mechanic: { ...mechanic.toObject(), password: undefined },
     });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: error.message });
   }
 };
 
 exports.logoutMechanic = async (req, res) => {
   try {
-    res.clearCookie("token"); // Clear cookie if you're using one
     res.status(200).json({ message: "Mechanic logged out successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-// Get all available mechanics nearby (within radius)
 exports.getNearbyAvailableMechanics = async (req, res) => {
-  const { longitude, latitude, radius = 20000 } = req.query; // radius in meters
+  const { longitude, latitude, radius = 20000 } = req.query;
 
   if (!longitude || !latitude) {
     return res.status(400).json({ message: "Coordinates are required" });
@@ -135,10 +117,7 @@ exports.getNearbyAvailableMechanics = async (req, res) => {
     const mechanics = await Mechanic.find({
       location: {
         $near: {
-          $geometry: {
-            type: "Point",
-            coordinates: [parseFloat(longitude), parseFloat(latitude)],
-          },
+          $geometry: { type: "Point", coordinates: [parseFloat(longitude), parseFloat(latitude)] },
           $maxDistance: parseFloat(radius),
         },
       },
@@ -152,7 +131,6 @@ exports.getNearbyAvailableMechanics = async (req, res) => {
   }
 };
 
-// ✅ Update mechanic availability
 exports.updateAvailability = async (req, res) => {
   try {
     const { mechanicId } = req.params;
@@ -175,7 +153,6 @@ exports.updateAvailability = async (req, res) => {
   }
 };
 
-// ✅ Update location (if mechanic moves)
 exports.updateLocation = async (req, res) => {
   try {
     const { mechanicId } = req.params;
@@ -183,14 +160,7 @@ exports.updateLocation = async (req, res) => {
 
     const updated = await Mechanic.findByIdAndUpdate(
       mechanicId,
-      {
-        $set: {
-          location: {
-            type: "Point",
-            coordinates: coordinates,
-          },
-        },
-      },
+      { $set: { location: { type: "Point", coordinates } } },
       { new: true }
     );
 
@@ -200,21 +170,19 @@ exports.updateLocation = async (req, res) => {
   }
 };
 
-//  Get mechanic profile
 exports.getMechanicProfile = async (req, res) => {
   try {
     const { mechanicId } = req.params;
-    const mechanic = await Mechanic.findById(mechanicId);
+    const mechanic = await Mechanic.findById(mechanicId).select("-password");
     res.status(200).json(mechanic);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-//  Get all mechanics (available and unavailable)
 exports.getAllMechanics = async (req, res) => {
   try {
-    const mechanics = await Mechanic.find().select("-password"); // exclude password
+    const mechanics = await Mechanic.find().select("-password");
     res.status(200).json(mechanics);
   } catch (error) {
     res.status(500).json({ message: error.message });
