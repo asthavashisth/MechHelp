@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom"; // ✅ Import this
 import axios from "axios";
 
 const UserAuth = () => {
@@ -9,6 +10,8 @@ const UserAuth = () => {
     password: "",
     address: "",
   });
+
+  const navigate = useNavigate(); // ✅ Create navigate instance
 
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -26,6 +29,11 @@ const UserAuth = () => {
       const res = await axios.post(url, payload);
       alert(`${isLogin ? "Login" : "Registration"} successful!`);
       console.log(res.data);
+
+      if (isLogin) {
+        // ✅ Redirect to homepage on successful login
+        navigate("/layout");
+      }
     } catch (err) {
       console.error(err);
       alert("Something went wrong!");
