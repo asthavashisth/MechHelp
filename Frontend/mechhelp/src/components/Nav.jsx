@@ -11,7 +11,7 @@ const Nav = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.get(`${USER_API_END_POINT}/logout`, {
+      await axios.post(`${USER_API_END_POINT}/users/logout`, {
         withCredentials: true,
       });
       navigate("/"); // ✅ Redirect after logout

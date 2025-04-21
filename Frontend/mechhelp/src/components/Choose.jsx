@@ -5,7 +5,7 @@ const Choose = () => {
   return (
     <div className="min-h-screen flex flex-col ">
       <div className="text-center">
-        <h1 className="text-black font-bold text-6xl">Why to choose us</h1>
+        <h1 className="text-black font-bold text-6xl">Why to choose us?</h1>
         <p className="text-3xl mt-4">We offer full service and maintenance</p>
         <div className="flex justify-center">
           <img src={car} alt="Car" className="max-w-full h-auto mt-4" />
