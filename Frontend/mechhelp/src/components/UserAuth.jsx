@@ -1,6 +1,9 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom"; // ✅ Import this
+import { useNavigate } from "react-router-dom"; //  Import this
 import axios from "axios";
+import toast, { Toaster } from "react-hot-toast";
+
+const API_ENDPOINT = import.meta.env.VITE_USER_API_END_POINT;
 
 const UserAuth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -8,40 +11,43 @@ const UserAuth = () => {
     name: "",
     email: "",
     password: "",
-    address: "",
+    phoneNumber: ""
   });
 
-  const navigate = useNavigate(); // ✅ Create navigate instance
+  const navigate = useNavigate(); //  Create navigate instance
 
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const loadingToast = toast.loading(`${isLogin ? "Logging in" : "Registering"}...`);
     try {
-      const url = `${import.meta.env.VITE_USER_API_END_POINT}/users/${
-        isLogin ? "login" : "register"
-      }`;
+      const url = `${API_ENDPOINT}/${isLogin ? "login" : "register"}`;
       const payload = isLogin
         ? { email: formData.email, password: formData.password }
         : formData;
 
-      const res = await axios.post(url, payload);
-      alert(`${isLogin ? "Login" : "Registration"} successful!`);
+      const res = await axios.post(url, payload, { withCredentials: true });
+      toast.success(`${isLogin ? "Login" : "Registration"} successful!`);
       console.log(res.data);
 
       if (isLogin) {
-        // ✅ Redirect to homepage on successful login
         navigate("/layout");
       }
     } catch (err) {
       console.error(err);
-      alert("Something went wrong!");
+      const errorMsg = err.response?.data?.message || (isLogin ? "Login failed!" : "Registration failed!");
+      toast.error(errorMsg);
+    } finally {
+      toast.dismiss(loadingToast);
     }
   };
 
   return (
     <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-xl space-y-6">
+      <Toaster position="top-right" />
+
       <h2 className="text-3xl font-bold text-center text-gray-700">
         {isLogin ? "User Login" : "User Registration"}
       </h2>
@@ -58,16 +64,18 @@ const UserAuth = () => {
               className="w-full p-3 border-2 border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
             />
             <input
-              name="address"
-              type="text"
-              placeholder="Address"
-              value={formData.address}
+              name="phoneNumber"
+              type="tel"
+              placeholder="Mobile Number"
+              value={formData.phoneNumber}
               onChange={handleChange}
               required
+              pattern="[0-9]{10}"
               className="w-full p-3 border-2 border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
             />
           </>
         )}
+        
         <input
           name="email"
           type="email"
@@ -86,6 +94,8 @@ const UserAuth = () => {
           required
           className="w-full p-3 border-2 border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
         />
+
+
         <button
           type="submit"
           className="w-full py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200"

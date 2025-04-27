@@ -2,13 +2,7 @@ const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema(
   {
-    firstName: {
-      type: String,
-      required: true,
-      trim: true,
-      minlength: 2,
-    },
-    lastName: {
+    name: {
       type: String,
       required: true,
       trim: true,
@@ -31,10 +25,6 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       match: [/^\d{10,15}$/, "Please enter a valid phone number"],
-    },
-    address: {
-      type: String,
-      trim: true,
     },
   },
   {

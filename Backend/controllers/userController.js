@@ -7,14 +7,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 // Register User
 exports.registerUser = async (req, res) => {
   try {
-    const {
-      firstName,
-      lastName,
-      email,
-      password,
-      phoneNumber,
-      address,
-    } = req.body;
+    const { name, email, password, phoneNumber } = req.body;
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
@@ -27,12 +20,10 @@ exports.registerUser = async (req, res) => {
 
     // Create new user
     const newUser = new User({
-      firstName,
-      lastName,
+      name,
       email,
       password: hashedPassword,
       phoneNumber,
-      address,
     });
 
     await newUser.save();
@@ -67,7 +58,12 @@ exports.loginUser = async (req, res) => {
       expiresIn: "7d",
     });
 
-    res.status(200).json({ message: "Login successful", user, token });
+    res.cookie("UserToken", token, {
+      httpOnly: true,
+      secure: false, // Use true if you're using HTTPS in production
+      sameSite: "Lax",
+    });
+    res.status(200).json({ message: "User Login successful", user, token });
   } catch (error) {
     console.error("Error in loginUser:", error);
     res.status(500).json({ error: error.message });
@@ -76,16 +72,16 @@ exports.loginUser = async (req, res) => {
 
 // Logout
 exports.Logout = (req, res) => {
-  return res.cookie("token", "", { expires: new Date(0) }).json({
+
+  return res.cookie("UserToken", "", { expires: new Date(0) }).json({
     message: "Logged out successfully",
     success: true,
   });
 };
-
 // Get User Profile
 exports.getUserProfile = async (req, res) => {
   try {
-    const userId = req.params.id;
+    const userId = req.user.id; 
     const user = await User.findById(userId).select("-password");
 
     if (!user) {
@@ -102,18 +98,16 @@ exports.getUserProfile = async (req, res) => {
 // Update User Profile
 exports.updateUserProfile = async (req, res) => {
   try {
-    const userId = req.params.id;
-    const { firstName, lastName, phoneNumber, address } = req.body;
+    const userId = req.user.id;
+    const { name, phoneNumber } = req.body;
 
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    user.firstName = firstName || user.firstName;
-    user.lastName = lastName || user.lastName;
+    user.name = name || user.name;
     user.phoneNumber = phoneNumber || user.phoneNumber;
-    user.address = address || user.address;
 
     await user.save();
     res.status(200).json({ message: "Profile updated successfully", user });
@@ -126,7 +120,7 @@ exports.updateUserProfile = async (req, res) => {
 // Delete User
 exports.deleteUser = async (req, res) => {
   try {
-    const userId = req.params.id;
+    const userId = req.user.id;
     const user = await User.findByIdAndDelete(userId);
 
     if (!user) {
