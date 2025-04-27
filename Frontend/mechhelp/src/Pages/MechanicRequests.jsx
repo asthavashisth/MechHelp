@@ -56,7 +56,7 @@ function MechanicRequests() {
 
   const handleStatusChange = async (requestId, status) => {
     try {
-      await axios.patch(`${API_ENDPOINT}/status`, {
+      await axios.patch(`${API_ENDPOINT}/m/status`, {
         requestId,
         status
       }, {
