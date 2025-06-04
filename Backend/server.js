@@ -25,8 +25,8 @@ const corsOptions = {
   origin: "https://mechhelp.vercel.app",
   credentials: true,
 };
-app.use(cors(corsOptions));
 
+app.use(cors(corsOptions));
 // Routes
 app.use("/api/users", userRoutes);
 app.use("/api/mechanics", mechanicRoutes);
