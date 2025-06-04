@@ -12,7 +12,7 @@ const Nav = () => {
   const handleLogout = async () => {
     try {
       await axios.post(`${USER_API_END_POINT}/logout`, {}, { withCredentials: true });
-      navigate("/"); // Redirect after successful logout
+      navigate("/"); 
     } catch (err) {
       console.error("Logout failed:", err);
     }
@@ -21,7 +21,7 @@ const Nav = () => {
   return (
     <div>
       {/* Navbar */}
-      <nav className="flex justify-between bg-black text-white items-center p-4 text-xl">
+      <nav className="nav flex justify-between bg-linear-to-r from-gray-800 via-blue-700 to-gray-900 text-white items-center p-4 text-xl">
         <h1 className="ml-2 font-semibold text-2xl">
           <span className="text-blue-600">M</span>ech
           <span className="text-orange-600">H</span>elp
@@ -93,7 +93,7 @@ const Nav = () => {
 
       {/* Mobile Menu */}
       {menuOpen && (
-        <div className="md:hidden bg-black text-white p-4 space-y-3 text-center">
+        <div className="nav md:hidden bg-linear-to-r from-gray-800 via-blue-700 to-gray-900 text-white p-4 space-y-3 text-center">
           <NavLink
             to="/layout"
             onClick={toggleMenu}
@@ -141,7 +141,7 @@ const Nav = () => {
               handleLogout();
               toggleMenu();
             }}
-            className="bg-blue-700 px-3 py-1 rounded-full text-white font-semibold cursor-pointer hover:bg-amber-200 hover:text-black mt-3"
+            className="bg-black px-3 py-1 rounded-full text-white font-semibold cursor-pointer hover:bg-amber-200 hover:text-black mt-3"
           >
             Logout
           </button>
