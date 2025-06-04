@@ -1,7 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const multer = require("multer");
-const upload = multer({ dest: 'uploads/' }); // or configure storage as needed
 
 
 const mechanicCtrl = require("../controllers/mechanicController");
@@ -17,7 +15,6 @@ router.get("/profile", verifyMechanicToken, mechanicCtrl.getMechanicProfile);
 router.put(
   "/updateprofile",
   verifyMechanicToken,
-  upload.single("profilePic"), // Add this middleware to handle file uploads
   mechanicCtrl.updateMechanicProfile
 );
 router.put(
