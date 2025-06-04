@@ -20,7 +20,7 @@ const app = express();
 app.use(express.json()); // Middleware to parse JSON requests
 
 const corsOptions = {
-  origin: "http://localhost:5173",
+  origin: ["http://localhost:5173","https://mech-help.vercel.app"],
   credentials: true, // Allow credentials (cookies, authorization headers, etc.)
 };
 app.use(cors(corsOptions));
