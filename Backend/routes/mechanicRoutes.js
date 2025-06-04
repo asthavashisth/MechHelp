@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-// const multer = require("multer");
-// const upload = multer({ dest: 'uploads/' }); // or configure storage as needed
+const multer = require("multer");
+const upload = multer({ dest: 'uploads/' }); // or configure storage as needed
 
 
 const mechanicCtrl = require("../controllers/mechanicController");
@@ -13,15 +13,11 @@ router.post("/logout", verifyMechanicToken, mechanicCtrl.logoutMechanic);
 
 router.get("/nearby", mechanicCtrl.getNearbyAvailableMechanics);
 router.get("/profiles", mechanicCtrl.getAllMechanics);
-router.get(
-  "/profile",
-  verifyMechanicToken,
-  mechanicCtrl.getMechanicProfile
-);
+router.get("/profile", verifyMechanicToken, mechanicCtrl.getMechanicProfile);
 router.put(
   "/updateprofile",
   verifyMechanicToken,
-  //upload.single("profilePic"), // Add this middleware to handle file uploads
+  upload.single("profilePic"), // Add this middleware to handle file uploads
   mechanicCtrl.updateMechanicProfile
 );
 router.put(
@@ -29,10 +25,6 @@ router.put(
   verifyMechanicToken,
   mechanicCtrl.updateAvailability
 );
-router.put(
-  "/location",
-  verifyMechanicToken,
-  mechanicCtrl.updateLocation
-);
+router.put("/location", verifyMechanicToken, mechanicCtrl.updateLocation);
 
 module.exports = router;
