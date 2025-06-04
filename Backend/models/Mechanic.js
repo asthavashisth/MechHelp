@@ -13,11 +13,13 @@ const MechanicSchema = new mongoose.Schema(
       unique: true,
       lowercase: true,
       trim: true,
+      match: [/.+\@.+\..+/, "Please enter a valid email address"],
     },
     phone: {
       type: String,
       required: true,
       trim: true,
+      match: [/^\d{10,15}$/, "Please enter a valid phone number"],
     },
     password: {
       type: String,
