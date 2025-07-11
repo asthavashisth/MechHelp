@@ -14,6 +14,9 @@ import MechanicRequestHistory from "./Pages/MechanicRequestHistory";
 import UserRequests from "./Pages/UserRequests";
 import UserRequestHistory from "./Pages/UserRequestHistory";
 
+console.log("✅ ENV →", import.meta.env.VITE_API_BASE_URL);
+
+
 function App() {
   const router = createBrowserRouter([
     {

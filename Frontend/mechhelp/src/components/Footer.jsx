@@ -45,7 +45,7 @@ const Footer = () => {
             <div className="flex flex-col text-gray-300 gap-3 font-poppins">
               <div className="flex items-center gap-2 justify-center md:justify-start">
                 <i className="fa-solid fa-phone"></i>
-                <span>+91 9130304068</span>
+                <span>+91 9828919203</span>
               </div>
               <div className="flex items-center gap-2 justify-center md:justify-start">
                 <i className="fa-solid fa-envelope"></i>
@@ -70,7 +70,7 @@ const Footer = () => {
       <div className="mt-10 text-center border-t border-gray-700 pt-4">
         <p className="text-gray-400 font-poppins text-sm">
           &copy; 2025 MechHelp | Designed by{" "}
-          <span className="uppercase text-cyan-400">@team mechhelp</span>
+          <span className="uppercase text-cyan-400">@astha vashisth</span>
         </p>
       </div>
     </div>

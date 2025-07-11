@@ -5,6 +5,7 @@ import toast, { Toaster } from "react-hot-toast";
 const API_ENDPOINT = import.meta.env.VITE_MECHANIC_API_END_POINT;
 const REQUEST_API_ENDPOINT = import.meta.env.VITE_REQUEST_API_END_POINT;
 const GEOCODE_API_KEY = import.meta.env.VITE_GEOCODE_API_KEY;
+console.log("OpenCage API Key:", GEOCODE_API_KEY);
 
 const calculateDistance = (lat1, lng1, lat2, lng2) => {
     const R = 6371;

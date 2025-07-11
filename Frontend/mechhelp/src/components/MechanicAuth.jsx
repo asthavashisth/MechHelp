@@ -250,9 +250,11 @@ const MechanicAuth = () => {
   };
 
   return (
-    <>
+    <div
+      className="h-auto min-h-[100vh] py-6 px-4 flex justify-center items-center bg-gray-100 overflow-y-auto"
+    >
       {/* Toast Container */}
-      {toasts.map(toast => (
+      {toasts.map((toast) => (
         <Toast
           key={toast.id}
           message={toast.message}
@@ -272,17 +274,22 @@ const MechanicAuth = () => {
             <CheckCircle className="text-blue-500 flex-shrink-0" size={20} />
             <div>
               <p className="text-blue-800 font-medium">Ready to Sign In</p>
-              <p className="text-blue-700 text-sm">Your login credentials have been pre-filled. Click Sign In to continue.</p>
+              <p className="text-blue-700 text-sm">
+                Your login credentials have been pre-filled. Click Sign In to
+                continue.
+              </p>
             </div>
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-
           {isRegister && (
             <>
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-600 mb-1">
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium text-gray-600 mb-1"
+                >
                   <User size={16} className="inline mr-1" />
                   Full Name
                 </label>
@@ -298,7 +305,10 @@ const MechanicAuth = () => {
               </div>
 
               <div>
-                <label htmlFor="phone" className="block text-sm font-medium text-gray-600 mb-1">
+                <label
+                  htmlFor="phone"
+                  className="block text-sm font-medium text-gray-600 mb-1"
+                >
                   <Phone size={16} className="inline mr-1" />
                   Phone Number
                 </label>
@@ -314,7 +324,10 @@ const MechanicAuth = () => {
               </div>
 
               <div>
-                <label htmlFor="address" className="block text-sm font-medium text-gray-600 mb-1">
+                <label
+                  htmlFor="address"
+                  className="block text-sm font-medium text-gray-600 mb-1"
+                >
                   <MapPin size={16} className="inline mr-1" />
                   Service Location
                 </label>
@@ -341,13 +354,19 @@ const MechanicAuth = () => {
                 {formData.coordinates && (
                   <div className="mt-2 flex items-center gap-1 text-xs text-green-600 bg-green-50 p-2 rounded">
                     <MapPin size={12} />
-                    <span>Precise location selected ✓ {formatCoordinates(formData.coordinates)}</span>
+                    <span>
+                      Precise location selected ✓{" "}
+                      {formatCoordinates(formData.coordinates)}
+                    </span>
                   </div>
                 )}
               </div>
 
               <div>
-                <label htmlFor="specializations" className="block text-sm font-medium text-gray-600 mb-1">
+                <label
+                  htmlFor="specializations"
+                  className="block text-sm font-medium text-gray-600 mb-1"
+                >
                   <Settings size={16} className="inline mr-1" />
                   Specializations
                 </label>
@@ -360,11 +379,16 @@ const MechanicAuth = () => {
                   required
                   className="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
-                <p className="text-xs text-gray-500 mt-1">Separate multiple specializations with commas</p>
+                <p className="text-xs text-gray-500 mt-1">
+                  Separate multiple specializations with commas
+                </p>
               </div>
 
               <div>
-                <label htmlFor="serviceTypes" className="block text-sm font-medium text-gray-600 mb-1">
+                <label
+                  htmlFor="serviceTypes"
+                  className="block text-sm font-medium text-gray-600 mb-1"
+                >
                   Service Types
                 </label>
                 <input
@@ -385,7 +409,10 @@ const MechanicAuth = () => {
                 </label>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label htmlFor="workingHoursStart" className="block text-xs text-gray-500 mb-1">
+                    <label
+                      htmlFor="workingHoursStart"
+                      className="block text-xs text-gray-500 mb-1"
+                    >
                       Start Time
                     </label>
                     <input
@@ -398,7 +425,10 @@ const MechanicAuth = () => {
                     />
                   </div>
                   <div>
-                    <label htmlFor="workingHoursEnd" className="block text-xs text-gray-500 mb-1">
+                    <label
+                      htmlFor="workingHoursEnd"
+                      className="block text-xs text-gray-500 mb-1"
+                    >
                       End Time
                     </label>
                     <input
@@ -413,7 +443,9 @@ const MechanicAuth = () => {
                 </div>
                 {formData.workingHoursStart && formData.workingHoursEnd && (
                   <p className="text-xs text-blue-600 mt-1">
-                    Working hours: {convertTo12HourFormat(formData.workingHoursStart)} - {convertTo12HourFormat(formData.workingHoursEnd)}
+                    Working hours:{" "}
+                    {convertTo12HourFormat(formData.workingHoursStart)} -{" "}
+                    {convertTo12HourFormat(formData.workingHoursEnd)}
                   </p>
                 )}
               </div>
@@ -422,7 +454,10 @@ const MechanicAuth = () => {
 
           {/* Common Email & Password Fields */}
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-600 mb-1">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-600 mb-1"
+            >
               <Mail size={16} className="inline mr-1" />
               Email Address
             </label>
@@ -438,7 +473,10 @@ const MechanicAuth = () => {
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-600 mb-1">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-600 mb-1"
+            >
               Password
             </label>
             <input
@@ -462,8 +500,10 @@ const MechanicAuth = () => {
                 <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
                 {isRegister ? "Creating Account..." : "Signing In..."}
               </>
+            ) : isRegister ? (
+              "Create Account"
             ) : (
-              isRegister ? "Create Account" : "Sign In"
+              "Sign In"
             )}
           </button>
         </form>
@@ -485,7 +525,7 @@ const MechanicAuth = () => {
         onLocationSelect={handleLocationSelect}
         initialAddress={formData.address}
       />
-    </>
+    </div>
   );
 };
 // Convert 24-hour time to 12-hour format
@@ -621,35 +661,35 @@ const LeafletMapModal = ({ isOpen, onClose, onLocationSelect, initialAddress = "
     }
   };
 
-  const updateLocationInfo = async (lat, lng) => {
-    setIsLoading(true);
-    try {
-      // Use Nominatim reverse geocoding (free alternative to Google)
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`
-      );
-      const data = await response.json();
+  // const updateLocationInfo = async (lat, lng) => {
+  //   setIsLoading(true);
+  //   try {
+  //     // Use Nominatim reverse geocoding (free alternative to Google)
+  //     const response = await fetch(
+  //       `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`
+  //     );
+  //     const data = await response.json();
 
-      const address = data.display_name || `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+  //     const address = data.display_name || `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
 
-      setSelectedLocation({
-        address,
-        coordinates: [lat, lng], // Changed to [lat, lng] format
-        lat,
-        lng
-      });
-    } catch (error) {
-      console.error('Error getting address:', error);
-      // Fallback to coordinates
-      setSelectedLocation({
-        address: `${lat.toFixed(6)}, ${lng.toFixed(6)}`,
-        coordinates: [lat, lng], // Changed to [lat, lng] format
-        lat,
-        lng
-      });
-    }
-    setIsLoading(false);
-  };
+  //     setSelectedLocation({
+  //       address,
+  //       coordinates: [lat, lng], // Changed to [lat, lng] format
+  //       lat,
+  //       lng
+  //     });
+  //   } catch (error) {
+  //     console.error('Error getting address:', error);
+  //     // Fallback to coordinates
+  //     setSelectedLocation({
+  //       address: `${lat.toFixed(6)}, ${lng.toFixed(6)}`,
+  //       coordinates: [lat, lng], // Changed to [lat, lng] format
+  //       lat,
+  //       lng
+  //     });
+  //   }
+  //   setIsLoading(false);
+  // };
 
   const handleSearch = async () => {
     if (!searchQuery.trim() || !map) return;
@@ -680,6 +720,40 @@ const LeafletMapModal = ({ isOpen, onClose, onLocationSelect, initialAddress = "
     setIsLoading(false);
   };
 
+  const updateLocationInfo = async (lat, lng) => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(
+        `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lng}&key=b3f3ab8c8c354c958da9fcd0e0165680`
+      );
+
+      const data = await response.json();
+
+      const address =
+        data.results?.[0]?.formatted || `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+
+      const locationData = {
+        address,
+        coordinates: [lat, lng],
+        lat,
+        lng,
+      };
+
+      setSelectedLocation(locationData);
+      console.log("✅ Selected Location:", locationData);
+    } catch (error) {
+      console.error("Error getting address:", error);
+      setSelectedLocation({
+        address: `${lat.toFixed(6)}, ${lng.toFixed(6)}`,
+        coordinates: [lat, lng],
+        lat,
+        lng,
+      });
+    }
+    setIsLoading(false);
+  };
+
+
   const handleConfirmLocation = () => {
     if (selectedLocation) {
       onLocationSelect(selectedLocation);
@@ -699,12 +773,13 @@ const LeafletMapModal = ({ isOpen, onClose, onLocationSelect, initialAddress = "
   }, [map]);
 
   if (!isOpen) return null;
+console.log("Selected Location:", selectedLocation);
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg w-full max-w-4xl h-[600px] flex flex-col">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4 pt-12 pb-4">
+      <div className="bg-white rounded-lg w-full max-w-4xl h-[600px] flex flex-col overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b">
+        {/* <div className="flex items-center justify-between p-4 border-b">
           <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
             <Map size={20} />
             Select Your Location
@@ -715,6 +790,30 @@ const LeafletMapModal = ({ isOpen, onClose, onLocationSelect, initialAddress = "
           >
             <X size={20} />
           </button>
+        </div> */}
+
+        <div className="flex items-center justify-between p-4 border-b bg-white sticky top-0 z-20 rounded-t-md shadow-md">
+          <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+            <Map size={20} />
+            Select Your Location
+          </h3>
+
+          <div className="flex gap-2">
+            <button
+              onClick={handleConfirmLocation}
+              disabled={!selectedLocation}
+              className="px-4 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Confirm
+            </button>
+            <button
+              onClick={onClose}
+              className="p-2 text-gray-500 hover:bg-gray-200 rounded-full"
+              title="Close"
+            >
+              <X size={20} />
+            </button>
+          </div>
         </div>
 
         {/* Search Bar */}
@@ -727,20 +826,24 @@ const LeafletMapModal = ({ isOpen, onClose, onLocationSelect, initialAddress = "
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search for a location..."
                 className="w-full p-3 pl-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                onKeyPress={(e) => e.key === "Enter" && handleSearch()}
               />
-              <Search className="absolute left-3 top-3.5 text-gray-400" size={20} />
+              <Search
+                className="absolute left-3 top-3.5 text-gray-400"
+                size={20}
+              />
             </div>
             <button
               onClick={handleSearch}
               disabled={isLoading}
               className="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50"
             >
-              {isLoading ? 'Searching...' : 'Search'}
+              {isLoading ? "Searching..." : "Search"}
             </button>
           </div>
           <p className="text-xs text-gray-500 mt-2">
-            💡 Click anywhere on the map or drag the red marker to set your location
+            💡 Click anywhere on the map or drag the red marker to set your
+            location
           </p>
         </div>
 
@@ -748,8 +851,8 @@ const LeafletMapModal = ({ isOpen, onClose, onLocationSelect, initialAddress = "
         <div className="flex-1 relative">
           <div
             ref={mapRef}
-            className="w-full h-full"
-            style={{ minHeight: '300px' }}
+            className="w-full h-full z-0"
+            style={{ minHeight: "300px" }}
           ></div>
 
           {/* Loading Overlay */}
@@ -769,8 +872,12 @@ const LeafletMapModal = ({ isOpen, onClose, onLocationSelect, initialAddress = "
             <div className="flex items-start gap-2">
               <MapPin className="text-red-500 mt-1 flex-shrink-0" size={20} />
               <div className="flex-1">
-                <p className="text-sm font-medium text-gray-800">Selected Location:</p>
-                <p className="text-sm text-gray-600 mt-1 break-words">{selectedLocation.address}</p>
+                <p className="text-sm font-medium text-gray-800">
+                  Selected Location:
+                </p>
+                <p className="text-sm text-gray-600 mt-1 break-words">
+                  {selectedLocation.address}
+                </p>
                 <p className="text-xs text-gray-500 mt-1">
                   Coordinates: {formatCoordinates(selectedLocation.coordinates)}
                 </p>
@@ -778,23 +885,6 @@ const LeafletMapModal = ({ isOpen, onClose, onLocationSelect, initialAddress = "
             </div>
           </div>
         )}
-
-        {/* Footer */}
-        <div className="p-4 border-t flex justify-end gap-2">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-md transition-colors"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleConfirmLocation}
-            disabled={!selectedLocation}
-            className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            Confirm Location
-          </button>
-        </div>
       </div>
     </div>
   );
